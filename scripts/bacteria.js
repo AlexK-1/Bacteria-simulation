@@ -4,7 +4,7 @@ const random = function(a, b) {
 
 class Bacteria {
     // класс бактерии
-    constructor(game, x, y, net, color) {
+    constructor(game, x, y, parentGenome) {
         this.game = game;
         this.x = x;
         this.y = y;
@@ -27,29 +27,27 @@ class Bacteria {
         this.image.src = `/images/bacteria_3.png`;
         this.vision = 200;
 
-        this.color = undefined;
-        if (typeof color === "undefined") {
-            this.color = random(0, 359);
-        } else {
-            this.color = color;
-        }
-
-        this.net = undefined;
-        if (typeof net === "undefined") {
-            this.net = new Network([ // структура нейросети бактерий
+        let genome;
+        this.net = new Network([ // структура нейросети бактерий
                 new Layer(4, 5), // кол-во входов, кол-во выходов, ф. активации
                 new Layer(5, 4, "sigmoid"),
                 new Layer(4, 2, "tanh"),
             ]);
+
+        this.color = undefined;
+        if (typeof parentGenome === "undefined") {
+            this.color = random(0, 359);
         } else {
-            this.net = new Network(structuredClone(net).layers.map(element => new Layer(element.inputSize-1, element.numberNeurons, element.activation, element.bias, element.weights)));
-            
+            genome = JSON.parse(parentGenome);
+            this.color = genome.color;
+            let newWeights = genome.weights;
+            newWeights[random(0, newWeights.length)] = randomFloat(-1, 1);
+            this.net.loadWeights(newWeights);
             if (randomFloat(0, 0.99) < 0.07) {
                 this.net.mutate(0.05);
                 const color_change = random(-40, 40);
                 this.color += color_change;
             }
-            this.net.mutate(0.05);
             this.wait = 0;
         }
     }
@@ -132,5 +130,9 @@ class Bacteria {
             context.drawImage(this.image, this.x, this.y, this.width, this.height);
             context.restore();
         }
+    }
+
+    getGenome() {
+        return JSON.stringify({weights: this.net.getWeights(), color: this.color, skills: []});
     }
 }

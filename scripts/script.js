@@ -14,7 +14,7 @@ class Game {
         this.bacteria = [];
         this.food = [];
         for (let i = 0; i < 50; i++) {
-            this.bacteria.push(new Bacteria(this, random(0, this.width), random(0, this.height), undefined, random(0, 359))); // создание нескольких бактерий
+            this.bacteria.push(new Bacteria(this, random(0, this.width), random(0, this.height))); // создание нескольких бактерий
         }
         for (let i = 0; i < 1000; i++) {
             this.food.push(new Food(this, random(0, this.width), random(0, this.height))); // создание еды при запуске
@@ -43,7 +43,7 @@ class Game {
             });
             if (element.reprTime > element.reprInterval && element.energy > element.reprCost+100) { // размножение бактерий
                 element.reprTime = 0;
-                this.bacteria.push(new Bacteria(this, element.x+random(-30, 30), element.y+random(-30, 30), element.net, element.color));
+                this.bacteria.push(new Bacteria(this, element.x+random(-30, 30), element.y+random(-30, 30), element.getGenome()));
                 element.energy -+ element.reprCost;
             }
             if ((element.age > element.maxAge) ||  (element.energy < 0)) {

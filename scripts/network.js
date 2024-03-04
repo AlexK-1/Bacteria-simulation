@@ -13,12 +13,12 @@ class Network {
     }
 
     run(input) {
-        // обработка нейросетью данных (на самом деле это просто запуск каждго слоя)
+        // обработка нейросетью данных (на самом деле это просто запуск каждого слоя)
         return this.layers.reduce((acc, item) => item.newRun(acc), input);
     }
 
     oldRun(input) {
-        // обработка нейросетью данных (на самом деле это просто запуск каждго слоя)
+        // обработка нейросетью данных (на самом деле это просто запуск каждого слоя)
         return this.layers.reduce((acc, item) => item.oldRun(acc), input);
     }
 
@@ -27,6 +27,17 @@ class Network {
         this.layers.forEach(function(element) {element.mutate(chance)});
     }
 
+    getWeights() {
+        return this.layers.reduce((acc, item) => acc.concat(item.weights), []);
+    }
+
+    loadWeights(weights) {
+        let weightNumber = 0;
+        for (let layer of this.layers) {
+            layer.weights = weights.slice(weightNumber, weightNumber+layer.inputSize*layer.numberNeurons);
+            weightNumber += layer.inputSize*layer.numberNeurons;
+        }
+    }
 }
 
 class Layer {

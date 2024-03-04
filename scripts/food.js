@@ -12,7 +12,6 @@ class Food {
             this.color = "#F1B011";
             this.energy = 70;
         }
-        console.log(this.color);
     }
 
     update() {}
