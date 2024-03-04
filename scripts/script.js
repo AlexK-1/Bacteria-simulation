@@ -13,7 +13,7 @@ class Game {
         this.pause = 0;
         this.bacteria = [];
         this.food = [];
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 50; i++) {
             this.bacteria.push(new Bacteria(this, random(0, this.width), random(0, this.height), undefined, random(0, 359))); // создание нескольких бактерий
         }
         for (let i = 0; i < 1000; i++) {
@@ -35,9 +35,6 @@ class Game {
         this.bacteria.forEach((element, index) => { // цикл обновления бактерий
             element.update();
             if (element.energy > element.maxEnergy) element.energy = element.maxEnergy;
-            if ((element.age > element.maxAge) ||  (element.energy < 0)) {
-                this.bacteria.splice(index, 1); // удаление мёртвых бактерий
-            }
             this.food.forEach((food, id_food) => { // цикл для столкновений бактерий с едой
                 if (this.checkCollision(food, element)) {
                     element.energy += food.energy;
@@ -48,6 +45,10 @@ class Game {
                 element.reprTime = 0;
                 this.bacteria.push(new Bacteria(this, element.x+random(-30, 30), element.y+random(-30, 30), element.net, element.color));
                 element.energy -+ element.reprCost;
+            }
+            if ((element.age > element.maxAge) ||  (element.energy < 0)) {
+                this.bacteria.splice(index, 1); // удаление мёртвых бактерий
+                this.food.push(new Food(this, element.x, element.y, "yellow"));
             }
         });
 

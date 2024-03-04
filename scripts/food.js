@@ -1,12 +1,18 @@
 class Food {
-    constructor(game, x, y) {
+    constructor(game, x, y, type) {
         this.game = game;
         this.x = x;
         this.y = y;
         this.width = 5;
         this.height = 5;
-        this.color = "#62B604";
-        this.energy = 50;
+        if (typeof type === "undefined" || type === "green") {
+            this.color = "#62B604";
+            this.energy = 50;
+        } else if (type === "yellow") {
+            this.color = "#F1B011";
+            this.energy = 70;
+        }
+        console.log(this.color);
     }
 
     update() {}

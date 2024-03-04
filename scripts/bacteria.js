@@ -37,8 +37,9 @@ class Bacteria {
         this.net = undefined;
         if (typeof net === "undefined") {
             this.net = new Network([ // структура нейросети бактерий
-                new Layer(4, 4, "sigmoid", false), // кол-во входов, кол-во выходов, ф. активации
-                new Layer(4, 2, "tanh", false),
+                new Layer(4, 5), // кол-во входов, кол-во выходов, ф. активации
+                new Layer(5, 4, "sigmoid"),
+                new Layer(4, 2, "tanh"),
             ]);
         } else {
             this.net = new Network(structuredClone(net).layers.map(element => new Layer(element.inputSize-1, element.numberNeurons, element.activation, element.bias, element.weights)));
