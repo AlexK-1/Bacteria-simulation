@@ -12,6 +12,8 @@ class InputHandler {
             if (e.key === "v") {
                 if (this.game.displayMode === "bacteria") {
                     this.game.displayMode = "type";
+                } else if (this.game.displayMode === "type") {
+                    this.game.displayMode = "skills";
                 } else {
                     this.game.displayMode = "bacteria";
                 }

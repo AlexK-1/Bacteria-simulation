@@ -16,14 +16,14 @@ class Game {
         for (let i = 0; i < 50; i++) {
             this.bacteria.push(new Bacteria(this, random(0, this.width), random(0, this.height))); // создание нескольких бактерий
         }
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < 2000; i++) {
             this.food.push(new Food(this, random(0, this.width), random(0, this.height))); // создание еды при запуске
         }
         this.bacteriaColors = {};
-        this.foodInterval = 10;
+        this.foodInterval = 1;
         this.foodSpawn = 5;
         this.foodTime = 0;
-        this.maxFood = 3000;
+        this.maxFood = 4000;
         this.displayMode = "bacteria";
     }
 
@@ -37,10 +37,18 @@ class Game {
             if (element.energy > element.maxEnergy) element.energy = element.maxEnergy;
             this.food.forEach((food, id_food) => { // цикл для столкновений бактерий с едой
                 if (this.checkCollision(food, element)) {
-                    element.energy += food.energy;
+                    element.energy += food.energy*element.skillFood*1;
                     this.food.splice(id_food, 1);
                 }
             });
+            for (let otherBacteria of this.bacteria) {
+                if (otherBacteria === element) continue;
+                if (this.checkCollision(otherBacteria, element)) { // цикл для столкновений бактерий с другими бактериями
+                    element.energy += element.skillBite*2; // одна бактерия кусает другую бактерию
+                    otherBacteria.energy -= element.skillBite*2;
+                    //console.log(otherBacteria.energy);
+                }
+            }
             if (element.reprTime > element.reprInterval && element.energy > element.reprCost+100) { // размножение бактерий
                 element.reprTime = 0;
                 this.bacteria.push(new Bacteria(this, element.x+random(-30, 30), element.y+random(-30, 30), element.getGenome()));
