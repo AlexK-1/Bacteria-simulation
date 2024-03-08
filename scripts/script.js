@@ -1,28 +1,33 @@
 // canvas setup
 const canvas = this.document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
-canvas.width = 2002;
-canvas.height = 1000;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+window.addEventListener("resize", e => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
 
 class Game {
     // главный класс игры
     constructor(width, height) {
-        this.scale = 0.5;
+        this.scale = 0.7;
         this.width = width;
         this.height = height;
         this.input = new InputHandler(this);
         this.pause = 0;
         this.bacteria = [];
         this.food = [];
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 500; i++) {
             this.bacteria.push(new Bacteria(this, random(0, this.width), random(0, this.height))); // создание нескольких бактерий
         }
-        for (let i = 0; i < 2000; i++) {
+        for (let i = 0; i < 3000; i++) {
             this.food.push(new Food(this, random(0, this.width), random(0, this.height))); // создание еды при запуске
         }
         this.bacteriaColors = {};
-        this.foodInterval = 1;
-        this.foodSpawn = 7;
+        this.foodInterval = 3;
+        this.foodSpawn = 5;
         this.foodTime = 0;
         this.maxFood = 7000;
         this.displayMode = "bacteria";
@@ -42,14 +47,17 @@ class Game {
                     this.food.splice(id_food, 1);
                 }
             });
+            let bite = false;
             for (let otherBacteria of this.bacteria) {
                 if (otherBacteria === element) continue;
                 if (this.checkCollision(otherBacteria, element)) { // цикл для столкновений бактерий с другими бактериями
-                    element.energy += element.skillBite*2; // одна бактерия кусает другую бактерию
-                    otherBacteria.energy -= element.skillBite*2;
-                    //console.log(otherBacteria.energy);
+                    element.energy -= otherBacteria.skillBite*3; // одна бактерия кусает другую бактерию
+                    element.energyUsageThisTick = element.energyUsage + otherBacteria.skillBite*3;
+                    bite = true;
+                    otherBacteria.energy += otherBacteria.skillBite*2;
                 }
             }
+            if (!bite) element.energyUsageThisTick = element.energyUsage;
             if (element.reprTime > element.reprInterval && element.energy > element.reprCost+100) { // размножение бактерий
                 element.reprTime = 0;
                 this.bacteria.push(new Bacteria(this, element.x+random(-30*this.scale, 30*this.scale), element.y+random(-30*this.scale, 30*this.scale), element.getGenome()));
@@ -95,7 +103,6 @@ class Game {
 }
 
 const game = new Game(canvas.width, canvas.height);
-
 
 let lastCalledTime;
 let fps;

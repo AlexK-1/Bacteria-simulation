@@ -28,14 +28,16 @@ class Bacteria {
         this.vision = 200;
         this.skillFood = 0;
         this.skillBite = 0;
+        this.energyUsageThisTick = this.energyUsage;
 
         let genome;
         
         this.net = new Network([ // структура нейросети бактерий
-            new Layer(6, 2, "tanh", false)
+            new Layer(9, 4, "tanh", false),
+            new Layer(4, 2, "tanh", false)
         ]);
 
-        this.color = undefined;
+        this.color = undefined; 
         if (typeof parentGenome === "undefined") {
             this.color = random(0, 359);
             this.size = random(11, 30);
@@ -45,21 +47,26 @@ class Bacteria {
         } else {
             genome = JSON.parse(parentGenome);
             this.color = genome.color;
-            this.size = genome.size;
+            this.size = genome.size + randomFloat(-0.1, 0.1);
             this.skillFood = genome.skills.food + randomFloat(-0.05, 0.05);
             this.skillBite = genome.skills.bite + randomFloat(-0.05, 0.05);
             let newWeights = genome.weights;
             newWeights[random(0, newWeights.length)] = randomFloat(-1, 1);
             this.net.loadWeights(newWeights);
             if (randomFloat(0, 0.99) < 0.07) {
-                this.net.mutate(0.05);
+                this.net.mutate(0.06);
                 const color_change = random(-40, 40);
                 this.color += color_change;
-                this.size += random(7, -7);
+                this.size += random(9, -9);
                 this.speed = 4/this.size;
-                this.skillFood += randomFloat(-0.2, 0.2);
-                this.skillBite += randomFloat(-0.2, 0.2);
+                this.skillFood += randomFloat(-0.5, 0.5);
+                this.skillBite += randomFloat(-0.5, 0.5);
             }
+            if (this.color < 0)     this.color = 0;
+            if (this.color > 360)   this.color = 360;
+            if (this.skillBite < 0) this.skillBite = 0;
+            if (this.skillFood < 0) this.skillFood = 0;
+            if (this.size < 1)      this.size = 1;
             this.wait = 0;
         }
         this.width = this.height = this.size;
@@ -96,19 +103,28 @@ class Bacteria {
         this.otherBacteriaX = 0;
         this.otherBacteriaY = 0;
         this.otherBacteriaI = 0;
+        this.nearestBacteriaX = null;
+        this.nearestBacteriaY = null;
+        this.nearestBacteriaDistance = Infinity;
         for(let element of this.game.bacteria) {
             if (element === this) continue;
             const fX = element.x-this.x;
             const fY = element.y-this.y;
-            if (Math.sqrt(fX**2+fY**2) < this.vision*this.game.scale) {
+            const fD = Math.sqrt(fX**2+fY**2);
+            if (fD < this.vision*this.game.scale) {
                 this.otherBacteriaX += fX;
                 this.otherBacteriaY += fY;
                 this.otherBacteriaI += 1;
+                if (fD < this.nearestBacteriaDistance) {
+                    this.nearestBacteriaDistance = fD;
+                    this.nearestBacteriaX = fX;
+                    this.nearestBacteriaY = fY;
+                }
             }
         }
 
         let newSpeedX, newSpeedY;
-        [newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI, this.nearestFoodX, this.nearestFoodY, this.otherBacteriaX/this.otherBacteriaI, this.otherBacteriaY/this.otherBacteriaI]); // запуск нейросети
+        [newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI, this.nearestFoodX, this.nearestFoodY, this.otherBacteriaX/this.otherBacteriaI, this.otherBacteriaY/this.otherBacteriaI, this.nearestBacteriaX, this.nearestBacteriaY, this.energyUsageThisTick]); // запуск нейросети
         //[newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI, this.otherBacteriaX/this.otherBacteriaI, this.otherBacteriaY/this.otherBacteriaI]);
         this.speedX += newSpeedX*this.speed*this.game.scale;
         this.speedY += newSpeedY*this.speed*this.game.scale;
@@ -133,7 +149,7 @@ class Bacteria {
         context.moveTo(this.x+this.width/2, this.y+this.height/2);
         context.strokeStyle = 'red';
         context.lineWidth = 3;
-        context.lineTo((this.nearestFoodX)+this.x+this.width/2, (this.nearestFoodY)+this.y+this.height/2);
+        context.lineTo((this.nearestBacteriaX)+this.x+this.width/2, (this.nearestBacteriaY)+this.y+this.height/2);
         context.closePath();
         context.stroke();*/
 
