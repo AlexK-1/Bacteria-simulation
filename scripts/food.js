@@ -20,7 +20,7 @@ class Food {
         //рисование еды
         context.beginPath();
         context.fillStyle = this.color;
-        context.arc(this.x+this.width/2, this.y+this.height/2, this.width, 0, 2*Math.PI, false);
+        context.arc(this.x+this.width*this.game.scale/2, this.y+this.height*this.game.scale/2, this.width*this.game.scale, 0, 2*Math.PI, false);
         context.fill();
     }
 }

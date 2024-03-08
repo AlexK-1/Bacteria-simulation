@@ -7,13 +7,14 @@ canvas.height = 1000;
 class Game {
     // главный класс игры
     constructor(width, height) {
+        this.scale = 0.5;
         this.width = width;
         this.height = height;
         this.input = new InputHandler(this);
         this.pause = 0;
         this.bacteria = [];
         this.food = [];
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 100; i++) {
             this.bacteria.push(new Bacteria(this, random(0, this.width), random(0, this.height))); // создание нескольких бактерий
         }
         for (let i = 0; i < 2000; i++) {
@@ -21,9 +22,9 @@ class Game {
         }
         this.bacteriaColors = {};
         this.foodInterval = 1;
-        this.foodSpawn = 5;
+        this.foodSpawn = 7;
         this.foodTime = 0;
-        this.maxFood = 4000;
+        this.maxFood = 7000;
         this.displayMode = "bacteria";
     }
 
@@ -51,7 +52,7 @@ class Game {
             }
             if (element.reprTime > element.reprInterval && element.energy > element.reprCost+100) { // размножение бактерий
                 element.reprTime = 0;
-                this.bacteria.push(new Bacteria(this, element.x+random(-30, 30), element.y+random(-30, 30), element.getGenome()));
+                this.bacteria.push(new Bacteria(this, element.x+random(-30*this.scale, 30*this.scale), element.y+random(-30*this.scale, 30*this.scale), element.getGenome()));
                 element.energy -+ element.reprCost;
             }
             if ((element.age > element.maxAge) ||  (element.energy < 0)) {
@@ -86,10 +87,10 @@ class Game {
     checkCollision(rect1, rect2) {
         // проверка столкновений двух прямоугольников
         return (
-            rect1.x < rect2.x + rect2.width &&
-            rect2.x < rect1.x + rect1.width &&
-            rect1.y < rect2.y + rect2.height &&
-            rect2.y < rect1.y + rect1.height)
+            rect1.x < rect2.x + rect2.width*this.scale &&
+            rect2.x < rect1.x + rect1.width*this.scale &&
+            rect1.y < rect2.y + rect2.height*this.scale &&
+            rect2.y < rect1.y + rect1.height*this.scale)
     }
 }
 

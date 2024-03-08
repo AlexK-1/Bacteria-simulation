@@ -19,7 +19,7 @@ class Bacteria {
         this.energyUsage = 1;
         this.reprInterval = 70;
         this.reprTime = -200;
-        this.reprCost = 400;
+        this.reprCost = 500;
         this.speedX = 0;
         this.speedY = 0;
         this.image = new Image();
@@ -32,7 +32,6 @@ class Bacteria {
         let genome;
         
         this.net = new Network([ // структура нейросети бактерий
-            new Layer(6, 6, "sigmoid", false),
             new Layer(6, 2, "tanh", false)
         ]);
 
@@ -52,7 +51,7 @@ class Bacteria {
             let newWeights = genome.weights;
             newWeights[random(0, newWeights.length)] = randomFloat(-1, 1);
             this.net.loadWeights(newWeights);
-            if (randomFloat(0, 0.99) < 0.17) {
+            if (randomFloat(0, 0.99) < 0.07) {
                 this.net.mutate(0.05);
                 const color_change = random(-40, 40);
                 this.color += color_change;
@@ -82,7 +81,7 @@ class Bacteria {
             const fX = element.x-this.x;
             const fY = element.y-this.y;
             const fD = Math.sqrt(fX**2+fY**2);
-            if (fD < this.vision) {
+            if (fD < this.vision*this.game.scale) {
                 this.foodX += fX;
                 this.foodY += fY;
                 this.foodI += 1;
@@ -101,7 +100,7 @@ class Bacteria {
             if (element === this) continue;
             const fX = element.x-this.x;
             const fY = element.y-this.y;
-            if (Math.sqrt(fX**2+fY**2) < this.vision) {
+            if (Math.sqrt(fX**2+fY**2) < this.vision*this.game.scale) {
                 this.otherBacteriaX += fX;
                 this.otherBacteriaY += fY;
                 this.otherBacteriaI += 1;
@@ -111,16 +110,16 @@ class Bacteria {
         let newSpeedX, newSpeedY;
         [newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI, this.nearestFoodX, this.nearestFoodY, this.otherBacteriaX/this.otherBacteriaI, this.otherBacteriaY/this.otherBacteriaI]); // запуск нейросети
         //[newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI, this.otherBacteriaX/this.otherBacteriaI, this.otherBacteriaY/this.otherBacteriaI]);
-        this.speedX += newSpeedX*this.speed;
-        this.speedY += newSpeedY*this.speed;
+        this.speedX += newSpeedX*this.speed*this.game.scale;
+        this.speedY += newSpeedY*this.speed*this.game.scale;
         this.speedX *= 0.85;
         this.speedY *= 0.85;
         this.x += this.speedX;
         this.y += this.speedY;
-        if (this.x > this.game.width-this.width) this.x = this.width;
-        if (this.x < 0) this.x = this.game.width-this.width;
-        if (this.y > this.game.height-this.height) this.y = this.width;
-        if (this.y < 0) this.y = this.game.height-this.height;
+        if (this.x > this.game.width-this.width*this.game.scale) this.x = this.game.width-this.width*this.game.scale;
+        if (this.x < 0) this.x = 0;
+        if (this.y > this.game.height-this.height*this.game.scale) this.y = this.game.height-this.height*this.game.scale;
+        if (this.y < 0) this.y = 0;
 
         this.energy -= this.energyUsage;
         this.age ++;
@@ -149,29 +148,29 @@ class Bacteria {
         /*context.beginPath();
         context.strokeStyle = 'red';
         context.lineWidth = 5;
-        context.arc(this.x, this.y, this.vision, 0, 2 * Math.PI, false);
+        context.arc(this.x, this.y, this.vision*this.game.scale, 0, 2 * Math.PI, false);
         context.stroke();*/
 
         if (this.game.displayMode === "type") {
             context.beginPath();
             context.fillStyle = `HSL(${this.color},100%, 50%)`
-            context.arc(this.x+this.height/2, this.y+this.width/2, this.height*0.5, 0, 2 * Math.PI, false);
+            context.arc(this.x+this.height*this.game.scale/2, this.y+this.width*this.game.scale/2, this.height*0.5*this.game.scale, 0, 2 * Math.PI, false);
             context.fill();
         }
 
         if (this.game.displayMode === "bacteria") {
             context.save();
-            context.translate(this.x+this.width/2, this.y+this.height/2);
+            context.translate(this.x+this.width*this.game.scale/2, this.y+this.height*this.game.scale/2);
             context.rotate(Math.atan2(this.speedY, this.speedX)+0.8);
-            context.translate(-(this.x+this.width/2), -(this.y+this.height/2));
-            context.drawImage(this.image, this.x, this.y, this.width, this.height);
+            context.translate(-(this.x+this.width*this.game.scale/2), -(this.y+this.height*this.game.scale/2));
+            context.drawImage(this.image, this.x, this.y, this.width*this.game.scale, this.height*this.game.scale);
             context.restore();
         }
 
         if (this.game.displayMode === "skills") {
             context.beginPath();
             context.fillStyle = `RGB(${this.skillBite*255},0,${this.skillFood*255})`
-            context.arc(this.x+this.height/2, this.y+this.width/2, this.height*0.5, 0, 2 * Math.PI, false);
+            context.arc(this.x+this.height*this.game.scale/2, this.y+this.width*this.game.scale/2, this.height*0.5*this.game.scale, 0, 2 * Math.PI, false);
             context.fill();
         }
     }
