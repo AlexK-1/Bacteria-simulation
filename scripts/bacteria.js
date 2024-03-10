@@ -33,8 +33,9 @@ class Bacteria {
         let genome;
         
         this.net = new Network([ // структура нейросети бактерий
-            new Layer(9, 4, "tanh", false),
-            new Layer(4, 2, "tanh", false)
+            //new Layer(9, 4, "relu", false),
+            //new Layer(4, 2, "tanh", false)
+            new Layer(9, 2, "tanh", false)
         ]);
 
         this.color = undefined; 
@@ -66,6 +67,7 @@ class Bacteria {
             if (this.color > 360)   this.color = 360;
             if (this.skillBite < 0) this.skillBite = 0;
             if (this.skillFood < 0) this.skillFood = 0;
+            if (this.skillFood > 1.2) this.skillFood = 1.2;
             if (this.size < 1)      this.size = 1;
             this.wait = 0;
         }
@@ -100,32 +102,75 @@ class Bacteria {
             }
         });
 
-        this.otherBacteriaX = 0;
-        this.otherBacteriaY = 0;
-        this.otherBacteriaI = 0;
-        this.nearestBacteriaX = null;
-        this.nearestBacteriaY = null;
-        this.nearestBacteriaDistance = Infinity;
+        this.otherBacteriaMX = 0; // M - свои бактерии
+        this.otherBacteriaMY = 0;
+        this.otherBacteriaMI = 0;
+        this.otherBacteriaLX = 0; // L - менее хищные бактерии
+        this.otherBacteriaLY = 0;
+        this.otherBacteriaLI = 0;
+        this.otherBacteriaHX = 0; // H - более хищные бактерии
+        this.otherBacteriaHY = 0;
+        this.otherBacteriaHI = 0;
+
+        this.nearestBacteriaMX = null;
+        this.nearestBacteriaMY = null;
+        this.nearestBacteriaMDistance = Infinity;
+        this.nearestBacteriaLX = null;
+        this.nearestBacteriaLY = null;
+        this.nearestBacteriaLDistance = Infinity;
+        this.nearestBacteriaHX = null;
+        this.nearestBacteriaHY = null;
+        this.nearestBacteriaHDistance = Infinity;
         for(let element of this.game.bacteria) {
             if (element === this) continue;
             const fX = element.x-this.x;
             const fY = element.y-this.y;
             const fD = Math.sqrt(fX**2+fY**2);
             if (fD < this.vision*this.game.scale) {
-                this.otherBacteriaX += fX;
-                this.otherBacteriaY += fY;
-                this.otherBacteriaI += 1;
-                if (fD < this.nearestBacteriaDistance) {
-                    this.nearestBacteriaDistance = fD;
-                    this.nearestBacteriaX = fX;
-                    this.nearestBacteriaY = fY;
+                if (element.skillBite < this.skillBite+0.1 && element.skillBite > this.skillBite-0.1) {
+                    this.otherBacteriaMX += fX;
+                    this.otherBacteriaMY += fY;
+                    this.otherBacteriaMI += 1;
+                    if (fD < this.nearestBacteriaMDistance) {
+                        this.nearestBacteriaMDistance = fD;
+                        this.nearestBacteriaMX = fX;
+                        this.nearestBacteriaMY = fY;
+                    }
+                }
+                if (element.skillBite < this.skillBite-0.1) {
+                    this.otherBacteriaLX += fX;
+                    this.otherBacteriaLY += fY;
+                    this.otherBacteriaLI += 1;
+                    if (fD < this.nearestBacteriaLDistance) {
+                        this.nearestBacteriaLDistance = fD;
+                        this.nearestBacteriaLX = fX;
+                        this.nearestBacteriaLY = fY;
+                    }
+                }
+                if (element.skillBite > this.skillBite+0.1) {
+                    this.otherBacteriaHX += fX;
+                    this.otherBacteriaHY += fY;
+                    this.otherBacteriaHI += 1;
+                    if (fD < this.nearestBacteriaHDistance) {
+                        this.nearestBacteriaHDistance = fD;
+                        this.nearestBacteriaHX = fX;
+                        this.nearestBacteriaHY = fY;
+                    }
                 }
             }
         }
 
         let newSpeedX, newSpeedY;
-        [newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI, this.nearestFoodX, this.nearestFoodY, this.otherBacteriaX/this.otherBacteriaI, this.otherBacteriaY/this.otherBacteriaI, this.nearestBacteriaX, this.nearestBacteriaY, this.energyUsageThisTick]); // запуск нейросети
-        //[newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI, this.otherBacteriaX/this.otherBacteriaI, this.otherBacteriaY/this.otherBacteriaI]);
+        /*[newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI, this.nearestFoodX, this.nearestFoodY,
+                                                this.otherBacteriaMX/this.otherBacteriaMI, this.otherBacteriaMY/this.otherBacteriaMI, this.nearestBacteriaMX, this.nearestBacteriaMY,
+                                                this.otherBacteriaLX/this.otherBacteriaLI, this.otherBacteriaLY/this.otherBacteriaLI, this.nearestBacteriaLX, this.nearestBacteriaLY,
+                                                this.otherBacteriaHX/this.otherBacteriaHI, this.otherBacteriaHY/this.otherBacteriaHI, this.nearestBacteriaHX, this.nearestBacteriaHY,
+                                                this.energyUsageThisTick]); // запуск нейросети*/
+        [newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI,
+                                                this.otherBacteriaMX/this.otherBacteriaMI, this.otherBacteriaMY/this.otherBacteriaMI,
+                                                this.otherBacteriaLX/this.otherBacteriaLI, this.otherBacteriaLY/this.otherBacteriaLI,
+                                                this.otherBacteriaHX/this.otherBacteriaHI, this.otherBacteriaHY/this.otherBacteriaHI,
+                                                this.energyUsageThisTick]); // запуск нейросети
         this.speedX += newSpeedX*this.speed*this.game.scale;
         this.speedY += newSpeedY*this.speed*this.game.scale;
         this.speedX *= 0.85;
@@ -146,18 +191,26 @@ class Bacteria {
     draw(context) {
         // рисование бактерии
         /*context.beginPath();
-        context.moveTo(this.x+this.width/2, this.y+this.height/2);
+        context.moveTo(this.x+this.width*this.game.scale/2, this.y+this.height*this.game.scale/2);
         context.strokeStyle = 'red';
         context.lineWidth = 3;
-        context.lineTo((this.nearestBacteriaX)+this.x+this.width/2, (this.nearestBacteriaY)+this.y+this.height/2);
+        context.lineTo((this.otherBacteriaHX/this.otherBacteriaHI)+this.x+this.width*this.game.scale/2, (this.nearestBacteriaHY/this.otherBacteriaHI)+this.y+this.height*this.game.scale/2);
         context.closePath();
         context.stroke();*/
 
         /*context.beginPath();
-        context.moveTo(this.x+this.width/2, this.y+this.height/2);
+        context.moveTo(this.x+this.width*this.game.scale/2, this.y+this.height*this.game.scale/2);
         context.strokeStyle = 'blue';
         context.lineWidth = 3;
-        context.lineTo((this.foodX/this.foodI)+this.x+this.width/2, (this.foodY/this.foodI)+this.y+this.height/2);
+        context.lineTo((this.nearestBacteriaLX/this.otherBacteriaLI)+this.x+this.width*this.game.scale/2, (this.nearestBacteriaLY/this.otherBacteriaLI)+this.y+this.height*this.game.scale/2);
+        context.closePath();
+        context.stroke();*/
+
+        /*context.beginPath();
+        context.moveTo(this.x+this.width*this.game.scale/2, this.y+this.height*this.game.scale/2);
+        context.strokeStyle = 'green';
+        context.lineWidth = 3;
+        context.lineTo((this.nearestBacteriaMX/this.otherBacteriaMI)+this.x+this.width*this.game.scale/2, (this.nearestBacteriaMY/this.otherBacteriaMI)+this.y+this.height*this.game.scale/2);
         context.closePath();
         context.stroke();*/
 
@@ -192,6 +245,10 @@ class Bacteria {
     }
 
     getGenome() {
-        return JSON.stringify({weights: this.net.getWeights(), color: this.color, size: this.size, skills: {food: this.skillFood, bite: this.skillBite}});
+        const network_structure = {layers: []};
+        for (let layer of this.net.layers) {
+            network_structure.layers.push({inputs: layer.inputSize, outputs: layer.numberNeurons, bias: layer.bias, activation: layer.activation});
+        }
+        return JSON.stringify({weights: this.net.getWeights(), color: this.color, size: this.size, skills: {food: this.skillFood, bite: this.skillBite}, network_structure: network_structure});
     }
 }
