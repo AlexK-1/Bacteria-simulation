@@ -19,17 +19,17 @@ class Game {
         this.pause = 0;
         this.bacteria = [];
         this.food = [];
-        for (let i = 0; i < 500; i++) {
+        for (let i = 0; i < 700; i++) {
             this.bacteria.push(new Bacteria(this, random(0, this.width), random(0, this.height))); // создание нескольких бактерий
         }
-        for (let i = 0; i < 3000; i++) {
+        for (let i = 0; i < 2000; i++) {
             this.food.push(new Food(this, random(0, this.width), random(0, this.height))); // создание еды при запуске
         }
         this.bacteriaColors = {};
-        this.foodInterval = 3;
-        this.foodSpawn = 5;
+        this.foodInterval = 1;
+        this.foodSpawn = 8;
         this.foodTime = 0;
-        this.maxFood = 7000;
+        this.maxFood = 8000;
         this.displayMode = "bacteria";
     }
 
@@ -43,7 +43,7 @@ class Game {
             if (element.energy > element.maxEnergy) element.energy = element.maxEnergy;
             this.food.forEach((food, id_food) => { // цикл для столкновений бактерий с едой
                 if (this.checkCollision(food, element)) {
-                    element.energy += food.energy*element.skillFood*1;
+                    element.energy += food.energy*element.skillFood*(1-element.skillBite);
                     this.food.splice(id_food, 1);
                 }
             });
@@ -51,10 +51,10 @@ class Game {
             for (let otherBacteria of this.bacteria) {
                 if (otherBacteria === element) continue;
                 if (this.checkCollision(otherBacteria, element)) { // цикл для столкновений бактерий с другими бактериями
-                    element.energy -= otherBacteria.skillBite*3; // одна бактерия кусает другую бактерию
-                    element.energyUsageThisTick = element.energyUsage + otherBacteria.skillBite*3;
+                    element.energy -= otherBacteria.skillBite*5*(1-otherBacteria.skillFood); // одна бактерия кусает другую бактерию
+                    element.energyUsageThisTick = element.energyUsage + otherBacteria.skillBite*5*(1-otherBacteria.skillFood);
                     bite = true;
-                    otherBacteria.energy += otherBacteria.skillBite*2;
+                    otherBacteria.energy += otherBacteria.skillBite*4*(1-otherBacteria.skillFood);
                 }
             }
             if (!bite) element.energyUsageThisTick = element.energyUsage;

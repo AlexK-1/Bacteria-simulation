@@ -33,9 +33,9 @@ class Bacteria {
         let genome;
         
         this.net = new Network([ // структура нейросети бактерий
-            //new Layer(9, 4, "relu", false),
+            //new Layer(17, 4, "sigmoid", false),
             //new Layer(4, 2, "tanh", false)
-            new Layer(9, 2, "tanh", false)
+            new Layer(17, 2, "tanh", false)
         ]);
 
         this.color = undefined; 
@@ -66,8 +66,9 @@ class Bacteria {
             if (this.color < 0)     this.color = 0;
             if (this.color > 360)   this.color = 360;
             if (this.skillBite < 0) this.skillBite = 0;
+            if (this.skillBite > 1) this.skillBite = 1;
             if (this.skillFood < 0) this.skillFood = 0;
-            if (this.skillFood > 1.2) this.skillFood = 1.2;
+            if (this.skillFood > 1) this.skillFood = 1;
             if (this.size < 1)      this.size = 1;
             this.wait = 0;
         }
@@ -161,16 +162,16 @@ class Bacteria {
         }
 
         let newSpeedX, newSpeedY;
-        /*[newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI, this.nearestFoodX, this.nearestFoodY,
+        [newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI, this.nearestFoodX, this.nearestFoodY,
                                                 this.otherBacteriaMX/this.otherBacteriaMI, this.otherBacteriaMY/this.otherBacteriaMI, this.nearestBacteriaMX, this.nearestBacteriaMY,
                                                 this.otherBacteriaLX/this.otherBacteriaLI, this.otherBacteriaLY/this.otherBacteriaLI, this.nearestBacteriaLX, this.nearestBacteriaLY,
                                                 this.otherBacteriaHX/this.otherBacteriaHI, this.otherBacteriaHY/this.otherBacteriaHI, this.nearestBacteriaHX, this.nearestBacteriaHY,
-                                                this.energyUsageThisTick]); // запуск нейросети*/
-        [newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI,
+                                                this.energyUsageThisTick]); // запуск нейросети
+        /*[newSpeedX, newSpeedY] = this.net.run([this.foodX/this.foodI, this.foodY/this.foodI,
                                                 this.otherBacteriaMX/this.otherBacteriaMI, this.otherBacteriaMY/this.otherBacteriaMI,
                                                 this.otherBacteriaLX/this.otherBacteriaLI, this.otherBacteriaLY/this.otherBacteriaLI,
                                                 this.otherBacteriaHX/this.otherBacteriaHI, this.otherBacteriaHY/this.otherBacteriaHI,
-                                                this.energyUsageThisTick]); // запуск нейросети
+                                                this.energyUsageThisTick]); // запуск нейросети*/
         this.speedX += newSpeedX*this.speed*this.game.scale;
         this.speedY += newSpeedY*this.speed*this.game.scale;
         this.speedX *= 0.85;
@@ -238,7 +239,7 @@ class Bacteria {
 
         if (this.game.displayMode === "skills") {
             context.beginPath();
-            context.fillStyle = `RGB(${this.skillBite*255},0,${this.skillFood*255})`
+            context.fillStyle = `RGB(${this.skillBite*(1-this.skillFood)*255},0,${this.skillFood*(1-this.skillBite)*255})`
             context.arc(this.x+this.height*this.game.scale/2, this.y+this.width*this.game.scale/2, this.height*0.5*this.game.scale, 0, 2 * Math.PI, false);
             context.fill();
         }
