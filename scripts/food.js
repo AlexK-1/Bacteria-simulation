@@ -7,10 +7,10 @@ class Food {
         this.height = 5;
         if (typeof type === "undefined" || type === "green") {
             this.color = "#62B604";
-            this.energy = 50;
+            //this.energy = 50;
         } else if (type === "yellow") {
             this.color = "#F1B011";
-            this.energy = 70;
+            //this.energy = 70;
         }
     }
 

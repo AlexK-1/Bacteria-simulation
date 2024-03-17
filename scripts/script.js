@@ -12,38 +12,54 @@ window.addEventListener("resize", e => {
 class Game {
     // главный класс игры
     constructor(width, height) {
-        this.scale = 0.7;
+        this.scale = WORLD_SCALE;
         this.width = width;
         this.height = height;
         this.input = new InputHandler(this);
         this.pause = 0;
         this.bacteria = [];
         this.food = [];
-        for (let i = 0; i < 700; i++) {
+        for (let i = 0; i < NUM_BACTERIA; i++) {
             this.bacteria.push(new Bacteria(this, random(0, this.width), random(0, this.height))); // создание нескольких бактерий
         }
-        for (let i = 0; i < 2000; i++) {
+        for (let i = 0; i < NUM_FOOD; i++) {
             this.food.push(new Food(this, random(0, this.width), random(0, this.height))); // создание еды при запуске
         }
         this.bacteriaColors = {};
         this.foodInterval = 1;
-        this.foodSpawn = 8;
+        this.foodSpawn = 11;
         this.foodTime = 0;
         this.maxFood = 8000;
         this.displayMode = "bacteria";
+        this.bacteriaColors = {};
+
+        this.bacteria.forEach(element => {
+            // добавление цвета для видового счётчика
+            if (Object.keys(this.bacteriaColors).includes(String(element.color))) {
+                this.bacteriaColors[String(element.color)][0] += 1;
+            } else {
+                this.bacteriaColors[String(element.color)] = [1, element.skillBite*(1-element.skillFood)*255, element.skillFood*(1-element.skillBite)*255, element.size];
+            }
+        });
     }
 
     update() {
         // обновление данных
+        let needUpdateCounters = false;
         this.bacteriaColors = {};
         if (!this.pause) {
-        
         this.bacteria.forEach((element, index) => { // цикл обновления бактерий
             element.update();
             if (element.energy > element.maxEnergy) element.energy = element.maxEnergy;
             this.food.forEach((food, id_food) => { // цикл для столкновений бактерий с едой
                 if (this.checkCollision(food, element)) {
-                    element.energy += food.energy*element.skillFood*(1-element.skillBite);
+                    let foodEnergy;
+                    if (typeof food.type === "undefined" || food.type === "green") {
+                        foodEnergy = ENERGY_GREEN_FOOD;
+                    } else if (food.type === "yellow") {
+                        foodEnergy = ENERGY_YELLOW_FOOD;
+                    }
+                    element.energy += foodEnergy*element.skillFood*(1-element.skillBite);
                     this.food.splice(id_food, 1);
                 }
             });
@@ -51,33 +67,44 @@ class Game {
             for (let otherBacteria of this.bacteria) {
                 if (otherBacteria === element) continue;
                 if (this.checkCollision(otherBacteria, element)) { // цикл для столкновений бактерий с другими бактериями
-                    element.energy -= otherBacteria.skillBite*5*(1-otherBacteria.skillFood); // одна бактерия кусает другую бактерию
-                    element.energyUsageThisTick = element.energyUsage + otherBacteria.skillBite*5*(1-otherBacteria.skillFood);
+                    element.energy -= otherBacteria.skillBite*ENERGY_BITE*(1-otherBacteria.skillFood); // одна бактерия кусает другую бактерию
+                    element.energyUsageThisTick = ENERGY_USAGE + otherBacteria.skillBite*ENERGY_BITE*(1-otherBacteria.skillFood);
                     bite = true;
-                    otherBacteria.energy += otherBacteria.skillBite*4*(1-otherBacteria.skillFood);
+                    otherBacteria.energy += otherBacteria.skillBite*ENERGY_BITE*0.9*(1-otherBacteria.skillFood);
                 }
             }
             if (!bite) element.energyUsageThisTick = element.energyUsage;
-            if (element.reprTime > element.reprInterval && element.energy > element.reprCost+100) { // размножение бактерий
+            if (element.reprTime > element.reprInterval && element.energy > REPR_COST+100) { // размножение бактерий
                 element.reprTime = 0;
                 this.bacteria.push(new Bacteria(this, element.x+random(-30*this.scale, 30*this.scale), element.y+random(-30*this.scale, 30*this.scale), element.getGenome()));
-                element.energy -+ element.reprCost;
+                element.energy -= REPR_COST;
+                needUpdateCounters = true;
             }
-            if ((element.age > element.maxAge) ||  (element.energy < 0)) {
+            if (element.energy > MAX_ENERGY) element.energy = MAX_ENERGY;
+            if ((element.age > MAX_AGE) ||  (element.energy < 0)) {
                 this.bacteria.splice(index, 1); // удаление мёртвых бактерий
                 this.food.push(new Food(this, element.x, element.y, "yellow"));
+                needUpdateCounters = true;
+            }
+            // добавление цвета для видового счётчика
+            if (Object.keys(this.bacteriaColors).includes(String(element.color))) {
+                this.bacteriaColors[String(element.color)][0] += 1;
+            } else {
+                this.bacteriaColors[String(element.color)] = [1, element.skillBite*(1-element.skillFood)*255, element.skillFood*(1-element.skillBite)*255, element.size];
             }
         });
 
+        if (needUpdateCounters) updateCounters();
+
         // создание новой еды
         this.foodTime ++;
-        if (this.foodTime >= this.foodInterval && this.food.length <= this.maxFood) {
+        if (this.foodTime >= FOOD_INTERVAL && this.food.length <= this.maxFood) {
             this.foodTime = 0;
-            for (let i = 0; i<this.foodSpawn; i++) {
+            for (let i = 0; i<AMOUNT_FOOD; i++) {
                 this.food.push(new Food(this, random(0, this.width), random(0, this.height)));
             }
         }
-        }
+    }
     }
 
     draw(context, fps) {
@@ -87,9 +114,9 @@ class Game {
 
         context.fillStyle = "black";
         context.font = "30px Arial";
-        context.fillText(`FPS: ${Math.round(fps)}`, 6, 30);
+        /*context.fillText(`FPS: ${Math.round(fps)}`, 6, 30);
         context.fillText(`Bacteria: ${this.bacteria.length}`, 6, 65);
-        context.fillText(`Food: ${this.food.length}`, 6, 100);
+        context.fillText(`Food: ${this.food.length}`, 6, 100);*/
     }
 
     checkCollision(rect1, rect2) {
@@ -100,9 +127,45 @@ class Game {
             rect1.y < rect2.y + rect2.height*this.scale &&
             rect2.y < rect1.y + rect1.height*this.scale)
     }
+
+    restart() {
+        this.width = canvas.width;
+        this.height = canvas.height;
+        this.scale = WORLD_SCALE;
+        this.bacteriaColors = {};
+        this.bacteria = [];
+        this.food = [];
+        for (let i = 0; i < NUM_BACTERIA; i++) {
+            this.bacteria.push(new Bacteria(this, random(0, this.width), random(0, this.height))); // создание нескольких бактерий
+        }
+        for (let i = 0; i < NUM_FOOD; i++) {
+            this.food.push(new Food(this, random(0, this.width), random(0, this.height))); // создание еды при запуске
+        }
+        this.foodTime = 0;
+
+        this.bacteria.forEach(element => {
+            // добавление цвета для видового счётчика
+            if (Object.keys(this.bacteriaColors).includes(String(element.color))) {
+                this.bacteriaColors[String(element.color)][0] += 1;
+            } else {
+                this.bacteriaColors[String(element.color)] = [1, element.skillBite*(1-element.skillFood)*255, element.skillFood*(1-element.skillBite)*255];
+            }
+        });
+
+        updateCounters();
+    }
+
+    getHerbivoresCount() {
+        return this.bacteria.reduce((acc, value) => acc+value.skillFood, 0);
+    }
+
+    getPredatorsCount() {
+        return this.bacteria.reduce((acc, value) => acc+value.skillBite, 0);
+    }
 }
 
 const game = new Game(canvas.width, canvas.height);
+updateCounters();
 
 let lastCalledTime;
 let fps;

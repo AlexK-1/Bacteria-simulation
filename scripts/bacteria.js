@@ -11,21 +11,20 @@ class Bacteria {
         this.width = 18;
         this.height = 18;
         this.speed = 1;
-        //this.maxAge = 2400 + Math.floor(Math.random()*200);
-        this.maxAge = 2500;
-        this.maxEnergy = 2000;
+        //this.maxAge = 2500;
+        //this.maxEnergy = 2000;
         this.age = 0;
-        this.energy = 400;
-        this.energyUsage = 1;
+        this.energy = ENERGY_START;
+        //this.energyUsage = 1;
         this.reprInterval = 70;
         this.reprTime = -200;
-        this.reprCost = 500;
+        //this.reprCost = 500;
         this.speedX = 0;
         this.speedY = 0;
         this.image = new Image();
         //this.image.src = `/images/bacteria_${random(0, 12)}.png`;
         this.image.src = `/images/bacteria_3.png`;
-        this.vision = 200;
+        //this.vision = 200;
         this.skillFood = 0;
         this.skillBite = 0;
         this.energyUsageThisTick = this.energyUsage;
@@ -54,8 +53,8 @@ class Bacteria {
             let newWeights = genome.weights;
             newWeights[random(0, newWeights.length)] = randomFloat(-1, 1);
             this.net.loadWeights(newWeights);
-            if (randomFloat(0, 0.99) < 0.07) {
-                this.net.mutate(0.06);
+            if (randomFloat(0, 0.99) < MUT_CHANCE) {
+                this.net.mutate(MUT_SIZE);
                 const color_change = random(-40, 40);
                 this.color += color_change;
                 this.size += random(9, -9);
@@ -70,6 +69,7 @@ class Bacteria {
             if (this.skillFood < 0) this.skillFood = 0;
             if (this.skillFood > 1) this.skillFood = 1;
             if (this.size < 1)      this.size = 1;
+            if (this.size > 40)     this.size = 40;
             this.wait = 0;
         }
         this.width = this.height = this.size;
@@ -80,7 +80,7 @@ class Bacteria {
             this.wait ++;
         }
         //console.log(this.wait);
-        if (typeof this.wait === "undefined" || this.wait > 50) {
+        if (typeof this.wait === "undefined" || this.wait > DELAY_START) {
         this.foodX = 0;
         this.foodY = 0;
         this.foodI = 0;
@@ -91,7 +91,7 @@ class Bacteria {
             const fX = element.x-this.x;
             const fY = element.y-this.y;
             const fD = Math.sqrt(fX**2+fY**2);
-            if (fD < this.vision*this.game.scale) {
+            if (fD < VISION*this.game.scale) {
                 this.foodX += fX;
                 this.foodY += fY;
                 this.foodI += 1;
@@ -127,7 +127,7 @@ class Bacteria {
             const fX = element.x-this.x;
             const fY = element.y-this.y;
             const fD = Math.sqrt(fX**2+fY**2);
-            if (fD < this.vision*this.game.scale) {
+            if (fD < VISION*this.game.scale) {
                 if (element.skillBite < this.skillBite+0.1 && element.skillBite > this.skillBite-0.1) {
                     this.otherBacteriaMX += fX;
                     this.otherBacteriaMY += fY;
@@ -176,14 +176,14 @@ class Bacteria {
         this.speedY += newSpeedY*this.speed*this.game.scale;
         this.speedX *= 0.85;
         this.speedY *= 0.85;
-        this.x += this.speedX;
-        this.y += this.speedY;
+        this.x += this.speedX*SPEED;
+        this.y += this.speedY*SPEED;
         if (this.x > this.game.width-this.width*this.game.scale) this.x = this.game.width-this.width*this.game.scale;
         if (this.x < 0) this.x = 0;
         if (this.y > this.game.height-this.height*this.game.scale) this.y = this.game.height-this.height*this.game.scale;
         if (this.y < 0) this.y = 0;
 
-        this.energy -= this.energyUsage;
+        this.energy -= ENERGY_USAGE;
         this.age ++;
         this.reprTime ++;
         }
@@ -218,7 +218,7 @@ class Bacteria {
         /*context.beginPath();
         context.strokeStyle = 'red';
         context.lineWidth = 5;
-        context.arc(this.x, this.y, this.vision*this.game.scale, 0, 2 * Math.PI, false);
+        context.arc(this.x, this.y, VISION*this.game.scale, 0, 2 * Math.PI, false);
         context.stroke();*/
 
         if (this.game.displayMode === "type") {

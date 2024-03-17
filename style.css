@@ -1,7 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+select {
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 0;
+}
+
+code {
+    font-size: 16px;
+}
+
+summary {
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+    margin-left: 0px;
+    /*font-size: 24px;
+    font-weight: 600;*/
+    cursor: pointer;
+}
+
+summary>.hover-info {
+    margin-top: 6px;
+}
+
+.controls {
+    font-family: Montserrat, sans-serif;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    background: rgba(117, 117, 117, 0.3);
+    border: 3px solid rgb(87, 87, 87);
+    border-radius: 5px;
+    padding-top: 28px;
+    width: 307px;
+}
+
+.menu {
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+}
+
+.inputsLine {
+    display: flex;
+    flex-direction: row;
+    margin-top: 8px;
+    margin-left: 5px;
+}
+
+.menu-button {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 100px;
+    cursor: pointer;
+    border: 0;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.9);
+    transition: background 0.1s;
+}
+
+.menu-button:hover {
+    background: rgba(245, 245, 245, 0.9);
+}
+
+.button-wrapper {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.single-line {
+    margin-top: 5px;
+    margin-left: 5px
+}
+
+.setting-label {
+    margin-right: 10px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.after-num {
+    margin-left: 10px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.info-button {
+    width: 20px;
+    height: 20px;
+    border: 0;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: 600;
+    padding-top: 1px;
+    background: rgba(255, 255, 255, 0.85);
+    margin-left: 10px;
+}
+
+.tooltip-text {
+    position: absolute;
+    visibility: hidden;
+    margin-left: 10px;
+    width: 300px;
+    color: white;
+    background: #192733a9;
+    border-radius: 3px;
+    padding: 5px 7px;
+    text-align: center;
+}
+
+.hover-info:hover .tooltip-text {
+    visibility: visible;
+}
+
+.hover-info {
+    position: relative;
+    display: inline-block;
+}
+
+.stat-line {
+    font-size: 18px;
+}
+
+.color-circle-statistics {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    margin-top: 1px;
+    margin-right: 9px;
+}
+
+.species-stat {
+    display: flex;
+    flex-direction: row;
+    height: 20px;
+}
+
+.param-text-species {
+    margin-right: 9px;
+    margin-top: 3px;
+    font-size: 17px;
+}
+
+.species-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 70px);
+    grid-auto-rows: minmax(25px, auto);
+    text-align: center;
 }
 
 #canvas1 {
@@ -10,9 +172,97 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /*background: #4d79bc;*/
-    background: #fff;
     max-width: 100%;
     max-height: 100%;
-    
+}
+
+.open-menu {
+    position: absolute;
+    top: 5px;
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 33, 33, 0.6);
+    border-width: 0px;
+    border-radius: 5px;
+    font-weight: 100;
+    font-size: 17px;
+    transition: background 0.1s;
+    cursor: pointer
+}
+
+.open-menu:hover {
+    background: rgba(255, 33, 33, 0.7);
+}
+
+#toggleMenu {
+    left: 5px;
+}
+
+#toggleStatistics {
+    right: 5px;
+}
+
+#settings {
+    top: 10px;
+    left: 10px;
+}
+
+#statistics {
+    top: 10px;
+    right: 10px;
+}
+
+#restart-button {
+    transition: background 0.1s;
+    background: rgba(255, 33, 33, 0.7);
+}
+
+#restart-button:hover {
+    background: rgba(235, 30, 30, 0.7);
+}
+
+#display-image-label {
+    border-radius: 3px 0 0 3px;
+}
+
+#display-skills-label {
+    border-radius: 0 3px 3px 0;
+}
+
+.inputsLine>input[type=number] {
+    width: 50px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 0;
+    border-radius: 2px;
+    padding: 3px;
+    /*margin-right: 10px;*/
+}
+
+.menu>h2 {
+    margin: 5px;
+    margin-left: 0px;
+}
+
+#select-display>input[type=radio] {
+    display: none;
+}
+
+#select-display>input[type=radio]:checked+label {
+    background: rgba(230, 230, 230, 0.85);
+    border-radius: 3px;
+}
+
+#select-display>label {
+    width: 74px;
+    height: 25px;
+    padding: 3px 0px;
+    background: rgba(255, 255, 255, 0.85);
+    text-align: center;
+    transition: background 0.1s;
+    cursor: pointer;
+}
+
+#select-display>label:hover {
+    background: rgba(243, 243, 243, 0.85);
 }
