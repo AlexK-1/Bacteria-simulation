@@ -21,9 +21,43 @@ class Bacteria {
         //this.reprCost = 500;
         this.speedX = 0;
         this.speedY = 0;
-        this.image = new Image();
-        //this.image.src = `/images/bacteria_${random(0, 12)}.png`;
-        this.image.src = `/images/bacteria_3.png`;
+        const image = new Image();
+        image.src = `/images/bacteria_3.png`;
+        image.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = this.width;
+            canvas.height = this.height;
+            const context = canvas.getContext("2d");
+
+            context.globalCompositeOperation = "source-over";
+            context.drawImage(image, 0, 0, this.width, this.height);
+            context.globalCompositeOperation = "hue";
+            context.fillStyle = `hsl(${this.color}, 100%, 99%)`;
+            context.fillRect(0, 0, this.width, this.height);
+            context.globalCompositeOperation = "destination-in";
+            context.drawImage(image, 0, 0, this.width, this.height);
+            context.globalCompositeOperation = "source-over";
+
+            this.imageSpecies = new Image();
+            this.imageSpecies.src = canvas.toDataURL();
+            this.image = this.imageSpecies;
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            context.globalCompositeOperation = "source-over";
+            context.drawImage(image, 0, 0, this.width, this.height);
+            context.globalCompositeOperation = "hue";
+            context.fillStyle = `rgb(${this.skillBite*(1-this.skillFood)*255},0,${this.skillFood*(1-this.skillBite)*255})`;
+            context.fillRect(0, 0, this.width, this.height);
+            context.globalCompositeOperation = "destination-in";
+            context.drawImage(image, 0, 0, this.width, this.height);
+            context.globalCompositeOperation = "source-over";
+
+            this.imageSkills = new Image();
+            this.imageSkills.src = canvas.toDataURL();
+
+            canvas.remove();
+        };
         //this.vision = 200;
         this.skillFood = 0;
         this.skillBite = 0;
@@ -199,49 +233,32 @@ class Bacteria {
         context.closePath();
         context.stroke();*/
 
-        /*context.beginPath();
-        context.moveTo(this.x+this.width*this.game.scale/2, this.y+this.height*this.game.scale/2);
-        context.strokeStyle = 'blue';
-        context.lineWidth = 3;
-        context.lineTo((this.nearestBacteriaLX/this.otherBacteriaLI)+this.x+this.width*this.game.scale/2, (this.nearestBacteriaLY/this.otherBacteriaLI)+this.y+this.height*this.game.scale/2);
-        context.closePath();
-        context.stroke();*/
-
-        /*context.beginPath();
-        context.moveTo(this.x+this.width*this.game.scale/2, this.y+this.height*this.game.scale/2);
-        context.strokeStyle = 'green';
-        context.lineWidth = 3;
-        context.lineTo((this.nearestBacteriaMX/this.otherBacteriaMI)+this.x+this.width*this.game.scale/2, (this.nearestBacteriaMY/this.otherBacteriaMI)+this.y+this.height*this.game.scale/2);
-        context.closePath();
-        context.stroke();*/
-
-        /*context.beginPath();
-        context.strokeStyle = 'red';
-        context.lineWidth = 5;
-        context.arc(this.x, this.y, VISION*this.game.scale, 0, 2 * Math.PI, false);
-        context.stroke();*/
-
-        if (this.game.displayMode === "type") {
-            context.beginPath();
+        if (this.game.displayMode === "type" && this.imageSpecies) {
+            /*context.beginPath();
             context.fillStyle = `HSL(${this.color},100%, 50%)`
             context.arc(this.x+this.height*this.game.scale/2, this.y+this.width*this.game.scale/2, this.height*0.5*this.game.scale, 0, 2 * Math.PI, false);
-            context.fill();
-        }
+            context.fill();*/
 
-        if (this.game.displayMode === "bacteria") {
             context.save();
             context.translate(this.x+this.width*this.game.scale/2, this.y+this.height*this.game.scale/2);
             context.rotate(Math.atan2(this.speedY, this.speedX)+0.8);
             context.translate(-(this.x+this.width*this.game.scale/2), -(this.y+this.height*this.game.scale/2));
-            context.drawImage(this.image, this.x, this.y, this.width*this.game.scale, this.height*this.game.scale);
+            context.drawImage(this.imageSpecies, this.x, this.y, this.width*this.game.scale, this.height*this.game.scale);
             context.restore();
         }
 
-        if (this.game.displayMode === "skills") {
-            context.beginPath();
+        if (this.game.displayMode === "skills" && this.imageSkills) {
+            /*context.beginPath();
             context.fillStyle = `RGB(${this.skillBite*(1-this.skillFood)*255},0,${this.skillFood*(1-this.skillBite)*255})`
             context.arc(this.x+this.height*this.game.scale/2, this.y+this.width*this.game.scale/2, this.height*0.5*this.game.scale, 0, 2 * Math.PI, false);
-            context.fill();
+            context.fill();*/
+
+            context.save();
+            context.translate(this.x+this.width*this.game.scale/2, this.y+this.height*this.game.scale/2);
+            context.rotate(Math.atan2(this.speedY, this.speedX)+0.8);
+            context.translate(-(this.x+this.width*this.game.scale/2), -(this.y+this.height*this.game.scale/2));
+            context.drawImage(this.imageSkills, this.x, this.y, this.width*this.game.scale, this.height*this.game.scale);
+            context.restore();
         }
     }
 

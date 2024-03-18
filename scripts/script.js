@@ -30,7 +30,7 @@ class Game {
         this.foodSpawn = 11;
         this.foodTime = 0;
         this.maxFood = 8000;
-        this.displayMode = "bacteria";
+        this.displayMode = "type";
         this.bacteriaColors = {};
 
         this.bacteria.forEach(element => {

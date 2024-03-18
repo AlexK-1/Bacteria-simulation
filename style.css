@@ -221,10 +221,6 @@ summary>.hover-info {
     background: rgba(235, 30, 30, 0.7);
 }
 
-#display-image-label {
-    border-radius: 3px 0 0 3px;
-}
-
 #display-skills-label {
     border-radius: 0 3px 3px 0;
 }
@@ -254,7 +250,7 @@ summary>.hover-info {
 }
 
 #select-display>label {
-    width: 74px;
+    width: 90px;
     height: 25px;
     padding: 3px 0px;
     background: rgba(255, 255, 255, 0.85);

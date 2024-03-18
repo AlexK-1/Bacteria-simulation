@@ -20,12 +20,11 @@
             </div>
             <p class="setting-label single-line">Display mode</p>
             <div class="inputsLine" id="select-display">
-                <input type="radio" id="display-image" name="display" checked="checked" onchange="game.displayMode='bacteria'"/><label for="display-image" id="display-image-label">Image</label>
-                <input type="radio" id="display-type" name="display" onchange="game.displayMode='type'"/><label for="display-type" id="display-type-label">Species</label>
+                <input type="radio" id="display-type" name="display" checked onchange="game.displayMode='type'"/><label for="display-type" id="display-type-label">Species</label>
                 <input type="radio" id="display-skills" name="display" onchange="game.displayMode='skills'"/><label for="display-skills" id="display-skills-label">Skills</label>
                 <div class="hover-info" style="margin-top: 2px;">
                     <button class="info-button">i</button>
-                    <span class="tooltip-text">Image - bacteria are displayed as images of bacteria. Species - bacteria look like circles, the color of which indicates the species of bacteria, the color of the ancestor and mutations. Skills - bacteria look like circles, the color of which indicates the skills of bacteria (blue - herbivore, red - predation).</span>
+                    <span class="tooltip-text">Species - the color of the bacteria shows the species of this bacteria. Skills - the color of the bacteria shows the skills of this bacteria (blue - herbivore, red - predation).</span>
                 </div>
             </div>
             <p class="setting-label single-line"></p>
