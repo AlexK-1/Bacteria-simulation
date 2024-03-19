@@ -245,7 +245,7 @@ summary>.hover-info {
 }
 
 #select-display>input[type=radio]:checked+label {
-    background: rgba(230, 230, 230, 0.85);
+    background: rgba(231, 231, 231, 0.85);
     border-radius: 3px;
 }
 

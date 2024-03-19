@@ -4,7 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Observe virtual bacteria and their development, create living conditions for them. Bacteria can be predators or herbivores that can eat green food. Bacteria change their behavior, adapt to new conditions, and evolve.">
+    <meta name="keywords" content="bacteria, simulation, evolution, food, genome, neural, network">
+    <meta name="author" content="AlexK-1">
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:image" content="images/bacteria_3.png">
+    <meta property="pg:title" content="Bacteria simulation">
+    <meta property="og:site_name" content="Bacteria simulation">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="Observe virtual bacteria and their development, create living conditions for them. Bacteria can be predators or herbivores that can eat green food. Bacteria change their behavior, adapt to new conditions, and evolve.">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/bacteria_3.png">
     <title>Bacteria simulation</title>
     <link href="https://cdn.jsdelivr.net/css-toggle-switch/latest/toggle-switch.css" rel="stylesheet" />
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -63,10 +73,10 @@
                     <input type="number" id="mag-age-bacteria" value="2500" onchange="MAX_AGE=Number(this.value)" min="1">
                     <p class="after-num">ticks</p>
                 </div>
-                <div class="inputsLine">
+                <!--<div class="inputsLine">
                     <p class="setting-label">Max energy: </p>
                     <input type="number" id="max-energy-bacteria" value="2000" onchange="MAX_ENERGY=Number(this.value)" min="1">
-                </div>
+                </div>-->
                 <div class="inputsLine">
                     <p class="setting-label">Energy usage: </p>
                     <input type="number" id="bacteria-energy-usage" value="1" onchange="ENERGY_USAGE=Number(this.value)" min="0">
@@ -85,7 +95,7 @@
                     <p class="after-num">px</p>
                     <div class="hover-info">
                         <button class="info-button">i</button>
-                        <span class="tooltip-text">The radius in which a bacteria can see food and other bacteria. On map size 100%</span>
+                        <span class="tooltip-text">The radius in which a bacteria can see food and other bacteria, with a small world size</span>
                     </div>
                 </div>
                 <div class="inputsLine">
