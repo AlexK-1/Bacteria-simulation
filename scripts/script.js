@@ -16,6 +16,7 @@ class Game {
         this.width = width;
         this.height = height;
         this.input = new InputHandler(this);
+        this.antibiotics = new Antibiotics(this);
         this.pause = 0;
         this.bacteria = [];
         this.food = [];
@@ -63,17 +64,14 @@ class Game {
                     this.food.splice(id_food, 1);
                 }
             });
-            let bite = false;
             for (let otherBacteria of this.bacteria) {
                 if (otherBacteria === element) continue;
                 if (this.checkCollision(otherBacteria, element)) { // цикл для столкновений бактерий с другими бактериями
                     element.energy -= otherBacteria.skillBite*ENERGY_BITE*(1-otherBacteria.skillFood); // одна бактерия кусает другую бактерию
-                    element.energyUsageThisTick = ENERGY_USAGE + otherBacteria.skillBite*ENERGY_BITE*(1-otherBacteria.skillFood);
-                    bite = true;
+                    element.energyUsageThisTick += otherBacteria.skillBite*ENERGY_BITE*(1-otherBacteria.skillFood);
                     otherBacteria.energy += otherBacteria.skillBite*ENERGY_BITE*0.9*(1-otherBacteria.skillFood);
                 }
             }
-            if (!bite) element.energyUsageThisTick = element.energyUsage;
             if (element.reprTime > element.reprInterval && element.energy > REPR_COST+100) { // размножение бактерий
                 element.reprTime = 0;
                 this.bacteria.push(new Bacteria(this, element.x+random(-30*this.scale, 30*this.scale), element.y+random(-30*this.scale, 30*this.scale), element.getGenome()));
@@ -109,12 +107,13 @@ class Game {
 
     draw(context, fps) {
         // рисование игры
+        if (USE_ANTIBIOTICS) this.antibiotics.draw(context);
         this.bacteria.forEach(element => element.draw(context));
         this.food.forEach(element => element.draw(context));
 
-        context.fillStyle = "black";
+        /*context.fillStyle = "black";
         context.font = "30px Arial";
-        /*context.fillText(`FPS: ${Math.round(fps)}`, 6, 30);
+        context.fillText(`FPS: ${Math.round(fps)}`, 6, 30);
         context.fillText(`Bacteria: ${this.bacteria.length}`, 6, 65);
         context.fillText(`Food: ${this.food.length}`, 6, 100);*/
     }
@@ -135,6 +134,12 @@ class Game {
         this.bacteriaColors = {};
         this.bacteria = [];
         this.food = [];
+        perlin.seed();
+        this.antibiotics.width = this.width;
+        this.antibiotics.height = this.height;
+        this.antibiotics.textureImage = null;
+        this.antibiotics.generateTextureValues();
+        this.antibiotics.generateTextureBufferImage();
         for (let i = 0; i < NUM_BACTERIA; i++) {
             this.bacteria.push(new Bacteria(this, random(0, this.width), random(0, this.height))); // создание нескольких бактерий
         }
@@ -182,7 +187,9 @@ const animate = function() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     game.draw(ctx, fps);
-    game.update();
+    for (let i=0; i<ITERATIONS_FRAME; i++) {
+        game.update();
+    }
     requestAnimationFrame(animate);
 }
 

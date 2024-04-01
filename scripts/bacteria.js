@@ -29,14 +29,12 @@ class Bacteria {
             canvas.height = this.height;
             const context = canvas.getContext("2d");
 
-            context.globalCompositeOperation = "source-over";
             context.drawImage(image, 0, 0, this.width, this.height);
-            context.globalCompositeOperation = "hue";
-            context.fillStyle = `hsl(${this.color}, 100%, 99%)`;
+            context.globalCompositeOperation = "color"; // source-in
+            context.fillStyle = `hsl(${this.color}, 50%, 50%)`;
             context.fillRect(0, 0, this.width, this.height);
             context.globalCompositeOperation = "destination-in";
             context.drawImage(image, 0, 0, this.width, this.height);
-            context.globalCompositeOperation = "source-over";
 
             this.imageSpecies = new Image();
             this.imageSpecies.src = canvas.toDataURL();
@@ -46,12 +44,11 @@ class Bacteria {
 
             context.globalCompositeOperation = "source-over";
             context.drawImage(image, 0, 0, this.width, this.height);
-            context.globalCompositeOperation = "hue";
+            context.globalCompositeOperation = "color";
             context.fillStyle = `rgb(${this.skillBite*(1-this.skillFood)*255},0,${this.skillFood*(1-this.skillBite)*255})`;
             context.fillRect(0, 0, this.width, this.height);
             context.globalCompositeOperation = "destination-in";
             context.drawImage(image, 0, 0, this.width, this.height);
-            context.globalCompositeOperation = "source-over";
 
             this.imageSkills = new Image();
             this.imageSkills.src = canvas.toDataURL();
@@ -107,6 +104,11 @@ class Bacteria {
             this.wait = 0;
         }
         this.width = this.height = this.size;
+        
+        if (this.x > this.game.width-this.width*this.game.scale) this.x = this.game.width-this.width*this.game.scale;
+        if (this.x < 0) this.x = 0;
+        if (this.y > this.game.height-this.height*this.game.scale) this.y = this.game.height-this.height*this.game.scale;
+        if (this.y < 0) this.y = 0;
     }
 
     update() {
@@ -217,7 +219,10 @@ class Bacteria {
         if (this.y > this.game.height-this.height*this.game.scale) this.y = this.game.height-this.height*this.game.scale;
         if (this.y < 0) this.y = 0;
 
-        this.energy -= ENERGY_USAGE;
+        const f = (x) => {if (x < 0) {return 0}; return x}
+    
+        this.energyUsageThisTick = ENERGY_USAGE + f(this.game.antibiotics.textureValues[Math.floor(this.y/this.game.antibiotics.pixelSize)][Math.floor(this.x/this.game.antibiotics.pixelSize)])*HARM_ANTIBIOTICS*USE_ANTIBIOTICS;
+        this.energy -= this.energyUsageThisTick;
         this.age ++;
         this.reprTime ++;
         }

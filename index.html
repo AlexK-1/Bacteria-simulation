@@ -18,13 +18,14 @@
     <title>Bacteria simulation</title>
     <link href="https://cdn.jsdelivr.net/css-toggle-switch/latest/toggle-switch.css" rel="stylesheet" />
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src='http://joeiddon.github.io/perlin/perlin.js'></script>
 </head>
 <body>
     <canvas id="canvas1"></canvas>
     <div class="controls" id="settings">
         <button class="open-menu" id="toggleMenu">☰</button>
         <div class="menu" id="settings-menu">
-            <h2>Management</h2>
+            <h2 style="margin-top: 0">Management</h2>
             <div class="button-wrapper">
                 <button class="menu-button" id="pause-button">Pause</button>
             </div>
@@ -37,7 +38,10 @@
                     <span class="tooltip-text">Species - the color of the bacteria shows the species of this bacteria. Skills - the color of the bacteria shows the skills of this bacteria (blue - herbivore, red - predation).</span>
                 </div>
             </div>
-            <p class="setting-label single-line"></p>
+            <div class="inputsLine">
+                <p class="setting-label">Iterations per frame: </p>
+                <input type="number" id="iterations-bacteria" onchange="ITERATIONS_FRAME=Number(this.value)" value="1" max="10" min="1">
+            </div>
             <div class="button-wrapper">
                 <button class="menu-button" id="restart-button">Restart</button>
             </div>
@@ -51,7 +55,7 @@
                 </summary>
                 <div class="inputsLine">
                     <p class="setting-label">Number of bacteria: </p>
-                    <input type="number" id="num-bacteria" value="700">
+                    <input type="number" id="num-bacteria" value="400">
                 </div>
                 <div class="inputsLine">
                     <p class="setting-label">Number of food: </p>
@@ -103,7 +107,7 @@
                     <input type="number" id="repr-cost-bacteria" value="500" onchange="REPR_COST=Number(this.value)" min="0">
                 </div>
                 <div class="inputsLine">
-                    <p class="setting-label">Speed: </p>
+                    <p class="setting-label">Bacteria speed: </p>
                     <input type="number" id="speed-bacteria" value="1" onchange="SPEED=Number(this.value)" min="0">
                 </div>
                 <div class="inputsLine">
@@ -131,7 +135,7 @@
                 </div>
                 <div class="inputsLine">
                     <p class="setting-label">Energy when bite: </p>
-                    <input type="number" id="energy-bite-bacteria" value="10" onchange="ENERGY_BITE=Number(this.value)" min="0">
+                    <input type="number" id="energy-bite-bacteria" value="20" onchange="ENERGY_BITE=Number(this.value)" min="0">
                     <div class="hover-info">
                         <button class="info-button">i</button>
                         <span class="tooltip-text">How much energy does a predatory bacteria take from another bacteria it has encountered in one tick</span>
@@ -166,6 +170,20 @@
                     </div>
                 </div>
             </details>
+            <details open>
+                <summary><h2>Antibiotics settings</h2></summary>
+                <div class="inputsLine">
+                    <p class="setting-label">Use antibiotics </p>
+                    <input type="checkbox" id="use-antibiotics" checked onchange="USE_ANTIBIOTICS=this.checked">
+                </div>
+                <div class="inputsLine">
+                    <p class="setting-label">Harm: </p>
+                    <input type="number" id="harm-antibiotics" value="30" onchange="HARM_ANTIBIOTICS=Number(this.value)" min="0">
+                    <div class="hover-info">
+                        <button class="info-button">i</button>
+                        <span class="tooltip-text">How much energy do antibiotics take from bacteria</span>
+                    </div>
+            </details>
         </div>
     </div>
 
@@ -186,6 +204,7 @@
         </div>
     </div>
 
+    <script src="scripts/antibiotics.js"></script>
     <script src="scripts/food.js"></script>
     <script src="scripts/config.js"></script>
     <script src="scripts/GUI.js"></script>

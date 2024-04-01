@@ -12,6 +12,9 @@ Bacteria form the basis of the simulation. A bacteria has age and energy. The ag
 
 At birth, a bacteria receives a certain amount of energy. A bacteria can gain energy by eating food or *"biting"* another bacteria. How much energy a bacteria gets when it eats food depends on its *herbivore coefficient (c. h.)*. The higher the coefficient, the more energy the bacteria receives when it eats food. How much energy a bacteria takes from another bacteria in a collision depends on the *predation coefficient (c. p.)*. The higher this coefficient, the more energy the bacteria can take away. These two coefficients can be used to determine whether a bacteria is herbivorous, omnivorous, or a predator.
 
+> [!NOTE]
+> As a rule, predators die at the beginning of the simulation and only a few herbivorous bacteria remain. But if the right conditions are chosen, predators can reappear from herbivore species.
+
 When a bacteria accumulates enough energy, it can create a new bacteria with a similar *genome*. The new bacteria has almost the same genome as its parent, but with a few small changes. There is also a chance of a large *mutation* of the bacteria. This contributes to the creation of new species of bacteria, the *evolution* of bacteria.
 
 The bacteria is controlled by a simple *neural network* with no *hidden layers*. The parameters that the bacteria knows: the direction to the accumulation of food and the coordinates of the nearest food, the direction to the accumulation of less dangerous bacteria and the coordinates of the nearest less predatory bacteria, the direction to the accumulation of bacteria of the same species and the coordinates of the nearest bacteria of the same species, the direction to the accumulation of more dangerous bacteria and the coordinates of the nearest more predatory bacteria, the amount of energy spent. Bacteria can only see food and other bacteria within a certain radius. **Bacteria can only move and take energy from the bacteria that collide with them.**
@@ -20,13 +23,20 @@ The bacteria is controlled by a simple *neural network* with no *hidden layers*.
 
 The food consists of green and yellow dots scattered all over the world of bacteria. Bacteria can eat food and get energy from it. When a bacteria dies, it leaves yellow food in its place. Green food appears by itself in a certain amount in a certain period of time.
 
+## Antibiotics
+
+*Antibiotics* represent blue areas. They cause damage to the bacteria trapped in them and take away energy from the bacteria. Antibiotics are generated randomly each time the simulation is restarted. The brighter the blue color, the stronger the antibiotics are there.
+
+> [!TIP]
+> You can find such an arrangement of antibiotics (by pressing the Restart button in the menu on the left), in which antibiotics will divide the simulation world into several parts, in these parts bacteria can develop separately from other parts of the world and different new types of bacteria can appear from one type of bacteria in different parts.
+
 ## GUI
 
-The interface consists of two panels: settings and statistics. They can be hidden using the red buttons in the corner of the panels.
+The interface consists of two panels: settings and statistics. They can be hidden using the red buttons in the corner of the panels. By clicking on the name of the settings group, you can hide/show the settings of this group.
 
 ### Settings
 
-The settings panel is located on the right side of the screen. There are controls, simulation start settings, bacteria and food settings.
+The settings panel is located on the right side of the screen. There are controls, simulation start settings, bacteria, food and antibiotics settings.
 
 The first group contains the pause and restart buttons for the simulation, as well as the bacteria display mode.
 
@@ -45,6 +55,8 @@ Bacterial settings and their description:
 * Energy when bite - how much energy does a predatory bacteria take from another bacteria it has encountered in one tick
 
 Food settings include: how much energy one yellow and green food contains, how much and how often green food will appear.
+
+There are two settings in the antibiotic settings: the use of antibiotics (whether antibiotics will be displayed and harm bacteria) and the amount of energy that antibiotics take from bacteria.
 
 ### Statistics
 
