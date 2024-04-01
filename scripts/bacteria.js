@@ -22,7 +22,7 @@ class Bacteria {
         this.speedX = 0;
         this.speedY = 0;
         const image = new Image();
-        image.src = `/images/bacteria_3.png`;
+        image.src = `../images/bacteria_3.png`;
         image.onload = () => {
             const canvas = document.createElement("canvas");
             canvas.width = this.width;
