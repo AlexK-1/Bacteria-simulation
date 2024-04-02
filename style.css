@@ -48,6 +48,9 @@ summary>.hover-info {
     border-radius: 5px;
     padding-top: 39px;
     width: 307px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(100% - 20px);
 }
 
 .menu {
