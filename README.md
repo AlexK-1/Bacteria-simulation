@@ -2,6 +2,9 @@
 
 Simulation of bacteria with the ability to customize the simulation using the *GUI*. As a result of evolution, bacteria change their behavior, size and speed, and the ability to eat food or other bacteria.
 
+> [!WARNING]
+> If you clone the repository, change the `TEST` variable in the file `/scripts/config.js ` (line number 27) to `true`, this is necessary for the correct loading of images.
+
 ## Basic rules
 
 Bacteria move based on the location of *food* (green and yellow dots) and other bacteria. A bacteria has energy that it uses up. When a bacteria encounters food, it receives energy (if it has the ability to do so), and the food disappears. When a bacteria collides with another bacteria, it takes energy from another bacteria (if it has the ability to do so). If the bacteria has no energy left, it dies and leaves *yellow food* in its place.

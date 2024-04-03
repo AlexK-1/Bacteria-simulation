@@ -35,7 +35,7 @@ class Bacteria {
 
             context.drawImage(image, 0, 0, this.width, this.height);
             context.globalCompositeOperation = "color"; // source-in
-            context.fillStyle = `hsl(${this.color}, 50%, 50%)`;
+            context.fillStyle = `hsl(${this.color}, 100%, 40%)`;
             context.fillRect(0, 0, this.width, this.height);
             context.globalCompositeOperation = "destination-in";
             context.drawImage(image, 0, 0, this.width, this.height);

@@ -33,9 +33,9 @@
             <div class="inputsLine" id="select-display">
                 <input type="radio" id="display-type" name="display" checked onchange="game.displayMode='type'"/><label for="display-type" id="display-type-label">Species</label>
                 <input type="radio" id="display-skills" name="display" onchange="game.displayMode='skills'"/><label for="display-skills" id="display-skills-label">Skills</label>
-                <div class="hover-info" style="margin-top: 2px;">
+                <div class="hover-info" style="margin-top: 2px;" title="Species - the color of the bacteria shows the species of this bacteria. Skills - the color of the bacteria shows the skills of this bacteria (blue - herbivore, red - predation).">
                     <button class="info-button">i</button>
-                    <span class="tooltip-text">Species - the color of the bacteria shows the species of this bacteria. Skills - the color of the bacteria shows the skills of this bacteria (blue - herbivore, red - predation).</span>
+                    <!--<span class="tooltip-text">Species - the color of the bacteria shows the species of this bacteria. Skills - the color of the bacteria shows the skills of this bacteria (blue - herbivore, red - predation).</span>-->
                 </div>
             </div>
             <div class="inputsLine">
@@ -48,14 +48,14 @@
             <details open>
                 <summary>
                     <h2>Start settings</h2>
-                    <div class="hover-info">
+                    <div class="hover-info" title="Changes to the settings in this section are applied only after restarting the simulation">
                         <button class="info-button">i</button>
-                        <span class="tooltip-text">Changes to the settings in this section are applied only after restarting the simulation</span>
+                        <!--<span class="tooltip-text">Changes to the settings in this section are applied only after restarting the simulation</span>-->
                     </div>
                 </summary>
                 <div class="inputsLine">
                     <p class="setting-label">Number of bacteria: </p>
-                    <input type="number" id="num-bacteria" value="400">
+                    <input type="number" id="num-bacteria" value="500">
                 </div>
                 <div class="inputsLine">
                     <p class="setting-label">Number of food: </p>
@@ -65,7 +65,7 @@
                     <p class="setting-label">World scale: </p>
                     <select id="world-scale" onchange="WORLD_SCALE=Number(this.value)">
                         <option value="1">Small</option>
-                        <option selected value="0.7">Middle</option>
+                        <option selected value="0.75">Middle</option>
                         <option value="0.5">Big</option>
                     </select>
                 </div>
@@ -77,16 +77,12 @@
                     <input type="number" id="mag-age-bacteria" value="2500" onchange="MAX_AGE=Number(this.value)" min="1">
                     <p class="after-num">ticks</p>
                 </div>
-                <!--<div class="inputsLine">
-                    <p class="setting-label">Max energy: </p>
-                    <input type="number" id="max-energy-bacteria" value="2000" onchange="MAX_ENERGY=Number(this.value)" min="1">
-                </div>-->
                 <div class="inputsLine">
                     <p class="setting-label">Energy usage: </p>
                     <input type="number" id="bacteria-energy-usage" value="1" onchange="ENERGY_USAGE=Number(this.value)" min="0">
-                    <div class="hover-info">
+                    <div class="hover-info" title="The amount of energy that a bacteria spends in one tick">
                         <button class="info-button">i</button>
-                        <span class="tooltip-text">The amount of energy that a bacteria spends in one tick</span>
+                        <!--<span class="tooltip-text">The amount of energy that a bacteria spends in one tick</span>-->
                     </div>
                 </div>
                 <div class="inputsLine">
@@ -97,9 +93,9 @@
                     <p class="setting-label">Viewing radius: </p>
                     <input type="number" id="vision-bacteria" value="200" onchange="VISION=Number(this.value)" min="0">
                     <p class="after-num">px</p>
-                    <div class="hover-info">
+                    <div class="hover-info" title="The radius in which a bacteria can see food and other bacteria, with a small world size">
                         <button class="info-button">i</button>
-                        <span class="tooltip-text">The radius in which a bacteria can see food and other bacteria, with a small world size</span>
+                        <!--<span class="tooltip-text">The radius in which a bacteria can see food and other bacteria, with a small world size</span>-->
                     </div>
                 </div>
                 <div class="inputsLine">
@@ -114,9 +110,9 @@
                     <p class="setting-label">Delay on start: </p>
                     <input type="number" id="delay-start-bacteria" value="50" onchange="DELAY_START=Number(this.value)" min="0">
                     <p class="after-num">ticks</p>
-                    <div class="hover-info">
+                    <div class="hover-info" title="How many ticks will a bacteria wait for after birth before starting to move">
                         <button class="info-button">i</button>
-                        <span class="tooltip-text">How many ticks will a bacteria wait for after birth before starting to move</span>
+                        <!--<span class="tooltip-text">How many ticks will a bacteria wait for after birth before starting to move</span>-->
                     </div>
                 </div>
                 <div class="inputsLine">
@@ -128,17 +124,17 @@
                     <p class="setting-label">Mutation size: </p>
                     <input type="number" id="mut-size-bacteria" value="10" onchange="MUT_CHANCE=Number(this.value)/100" min="0">
                     <p class="after-num">%</p>
-                    <div class="hover-info">
+                    <div class="hover-info" title="How many connections in the bacterial neural network will change during mutation">
                         <button class="info-button">i</button>
-                        <span class="tooltip-text">How many connections in the bacterial neural network will change during mutation</span>
+                        <!--<span class="tooltip-text">How many connections in the bacterial neural network will change during mutation</span>-->
                     </div>
                 </div>
                 <div class="inputsLine">
                     <p class="setting-label">Energy when bite: </p>
                     <input type="number" id="energy-bite-bacteria" value="20" onchange="ENERGY_BITE=Number(this.value)" min="0">
-                    <div class="hover-info">
+                    <div class="hover-info" title="How much energy does a predatory bacteria take from another bacteria it has encountered in one tick">
                         <button class="info-button">i</button>
-                        <span class="tooltip-text">How much energy does a predatory bacteria take from another bacteria it has encountered in one tick</span>
+                        <!--<span class="tooltip-text">How much energy does a predatory bacteria take from another bacteria it has encountered in one tick</span>-->
                     </div>
                 </div>
             </details>
@@ -156,17 +152,17 @@
                     <p class="setting-label">Food interval: </p>
                     <input type="number" id="food-interval-bacteria" value="1" onchange="FOOD_INTERVAL=Number(this.value)" min="1">
                     <p class="after-num">ticks</p>
-                    <div class="hover-info">
+                    <div class="hover-info" title="The time interval between the appearance of food">
                         <button class="info-button">i</button>
-                        <span class="tooltip-text">The time interval between the appearance of food</span>
+                        <!--<span class="tooltip-text">The time interval between the appearance of food</span>-->
                     </div>
                 </div>
                 <div class="inputsLine">
                     <p class="setting-label">Amount of food: </p>
                     <input type="number" id="food-amount-bacteria" value="11" onchange="AMOUNT_FOOD=Number(this.value)" min="0">
-                    <div class="hover-info">
+                    <div class="hover-info" title="The amount of food that will appear every 'Food interval'">
                         <button class="info-button">i</button>
-                        <span class="tooltip-text">The amount of food that will appear every <code>Food interval</code> ticks</span>
+                        <!--<span class="tooltip-text">The amount of food that will appear every <code>Food interval</code> ticks</span>-->
                     </div>
                 </div>
             </details>
@@ -179,9 +175,9 @@
                 <div class="inputsLine">
                     <p class="setting-label">Harm: </p>
                     <input type="number" id="harm-antibiotics" value="30" onchange="HARM_ANTIBIOTICS=Number(this.value)" min="0">
-                    <div class="hover-info">
+                    <div class="hover-info" title="How much energy do antibiotics take from bacteria">
                         <button class="info-button">i</button>
-                        <span class="tooltip-text">How much energy do antibiotics take from bacteria</span>
+                        <!--<span class="tooltip-text">How much energy do antibiotics take from bacteria</span>-->
                     </div>
             </details>
         </div>

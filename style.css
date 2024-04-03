@@ -47,7 +47,7 @@ summary>.hover-info {
     border: 3px solid rgb(87, 87, 87);
     border-radius: 5px;
     padding-top: 39px;
-    width: 307px;
+    width: 315px;
     overflow-x: hidden;
     overflow-y: auto;
     max-height: calc(100% - 20px);
@@ -131,6 +131,18 @@ summary>.hover-info {
     padding: 5px 7px;
     text-align: center;
 }
+
+/*.hover-info:hover::after {
+    position: fixed;
+    margin-top: -30px;
+    content: attr(alt);
+    width: 300px;
+    color: white;
+    background: #192733a9;
+    border-radius: 3px;
+    padding: 5px 7px;
+    text-align: center;
+}*/
 
 .hover-info:hover .tooltip-text {
     visibility: visible;

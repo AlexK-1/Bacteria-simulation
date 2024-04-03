@@ -6,12 +6,18 @@ toggleMenuButton.onclick = function () {
         menu.style.display = "none";
         controls.style.border = "0px";
         controls.style.width = "0px";
+        controls.style.overflowX = "visible";
+        controls.style.overflowY = "visible";
+        controls.style.background = "rgba(0, 0, 0, 0)";
         toggleMenuButton.style = "top: 8px; left: 8px";
     } else {
         menu.style.display = "";
-        controls.style.border = "3px solid rgb(87, 87, 87)";
         toggleMenuButton.style = "";
+        controls.style.border = "3px solid rgb(87, 87, 87)";
         controls.style.width = "";
+        controls.style.overflowX = "hidden";
+        controls.style.overflowY = "auto";
+        controls.style.background = "rgba(117, 117, 117, 0.3)";
     }
 }
 
@@ -23,12 +29,18 @@ toggleStatisticsButton.onclick = function () {
         menu.style.display = "none";
         controls.style.border = "0px";
         controls.style.width = "0px";
+        controls.style.overflowX = "visible";
+        controls.style.overflowY = "visible";
+        controls.style.background = "rgba(0, 0, 0, 0)";
         toggleStatisticsButton.style = "top: 8px; right: 8px";
     } else {
         menu.style.display = "";
-        controls.style.border = "3px solid rgb(87, 87, 87)";
         toggleStatisticsButton.style = "";
+        controls.style.border = "3px solid rgb(87, 87, 87)";
         controls.style.width = "";
+        controls.style.overflowX = "hidden";
+        controls.style.overflowY = "auto";
+        controls.style.background = "rgba(117, 117, 117, 0.3)";
     }
 }
 

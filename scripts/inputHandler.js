@@ -16,6 +16,9 @@ class InputHandler {
                     this.game.displayMode = "type";
                 }
             }
+            if (e.key === "r") {
+                this.game.restart();
+            }
         });
         window.addEventListener('keyup', (e) => {
             
